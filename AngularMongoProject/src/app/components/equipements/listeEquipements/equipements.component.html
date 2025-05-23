@@ -1,0 +1,140 @@
+<div class="card px-5 py-5">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-2">
+    <ng-template pTemplate="left">
+      <div class="my-2">
+        <button pButton pRipple label="Ajouter" icon="pi pi-plus" class="p-button-success mr-2"
+          (click)="openNew()"></button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+  <p-table #dt [value]="equipements" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['nom']"
+    [paginator]="true" [rowsPerPageOptions]="[5,10,15]" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Affichage de {first} à {last} des entrées {totalRecords}" [rowHover]="true">
+    <ng-template pTemplate="caption">
+      <div class="flex flex-row justify-content-between items-center">
+        <div class="w-full">
+          <h5 class="m-1">Gère les equipements </h5>
+        </div>
+        <div class="block mt-5 md:mt-0 p-input-icon-right text-right">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Chercher par nom ..."
+            class="w-full sm:w-auto" />
+        </div>
+      </div>
+    </ng-template>
+
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="nom">Nom<p-sortIcon field="nom"></p-sortIcon></th>
+        <th pSortableColumn="type">Type<p-sortIcon field="type"></p-sortIcon></th>
+        <th pSortableColumn="dateAchat">Date_Achat<p-sortIcon field="dateAchat"></p-sortIcon></th>
+        <th pSortableColumn="etat">Etat<p-sortIcon field="etat"></p-sortIcon></th>
+        <th pSortableColumn="competence">Competence<p-sortIcon field="competence"></p-sortIcon></th>
+
+        <th>Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-equipement>
+      <tr>
+        <td style="width:15%; min-width:9rem;">
+          <span class="p-column-title">Nom</span>
+          {{equipement.nom}}
+        </td>
+        <td style="width:15%; min-width:9rem;">
+          <span class="p-column-title">Type</span>
+          {{equipement.type}}
+        </td>
+        <td style="width:15%; min-width:9rem;">
+          <span class="p-column-title">Date_Achat</span>
+          {{equipement.dateAchat}}
+        </td>
+        <td style="width:15%; min-width:9rem;">
+          <span class="p-column-title">Etat</span>
+          {{equipement.etat}}
+        </td>
+        <td style="width:15%; min-width:9rem;">
+          <span class="p-column-title">Competence</span>
+          <ng-container *ngIf="equipement.competence != null ; else noCompetence">
+            {{ equipement.competence?.nom }}
+          </ng-container>
+          <ng-template #noCompetence>
+            Aucune competence
+          </ng-template>
+        </td>
+        <td>
+          <div class="flex flex-wrap gap-3">
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+              (click)="getEquipement(equipement.id)"></button>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              (click)="deleteEquipement(equipement)"></button>
+            <button pButton pRipple type="button" icon="pi pi-cog" label="" class="p-button-help"
+              (click)="openMaintenanceDialog(equipement.id)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<app-add-equipement-dialog [equipementDialogAdd]="equipementDialogAdd" [etatsOptions]="etatsOptions"
+  [competences]="competences" (save)="onAddEquipement($event)" (close)="equipementDialogAdd = false">
+</app-add-equipement-dialog>
+
+<app-edit-equipement-dialog [equipementDialogEdit]="equipementDialogEdit" [equipement]="selectedEquipement"
+  [etatsOptions]="etatsOptions" [competences]="competences" (save)="onUpdateEquipement($event)"
+  (close)="equipementDialogEdit = false">
+</app-edit-equipement-dialog>
+
+<div *ngIf="deleteEquipementDialog">
+  <p-dialog [(visible)]="deleteEquipementDialog" header="Confirmer" [modal]="true" [style]="{width:'450px'}">
+    <div class="flex align-items-center justify-content-center">
+      <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+      <span *ngIf="equipement">Êtes-vous sûr de vouloir supprimer <b>{{equipement.nom}}</b>?</span>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non"
+        (click)="deleteEquipementDialog = false"></button>
+      <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+    </ng-template>
+  </p-dialog>
+</div>
+
+<div *ngIf="maintenanceDialog">
+  <p-dialog [(visible)]="maintenanceDialog" [style]="{width: '900px','height': '500px'}" header="Modifier equipement"
+    [modal]="true" class="p-fluid" [formGroup]="equipementFormEdit">
+    <div class="card">
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-6">
+          <label htmlFor="nom">Nom Equipement</label>
+          <input pInputText type="texte" id="nom" formControlName="nom" inputId="nom" required autofocus
+            [ngClass]="{'ng-invalid ng-dirty' :submitted && equipementFormEdit.get('nom')?.hasError('required')}" 
+            [disabled]="isDisabled"/>
+        </div>
+        <div>
+        </div>
+  
+        <div class="field col-12 md:col-6">
+          <label htmlFor="etat">Maintenance</label>
+          <p-dropdown
+          formControlName="etat"
+          [options]="etatsOptions"
+          optionLabel="label"
+          optionValue="value"
+          display="chip"
+          placeholder="Sélectionner une état de maintenance"
+          autofocus
+          [ngClass]="{'ng-invalid ng-dirty' :submitted && equipementFormEdit.get('etat')?.hasError('required')}">
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text"
+        (click)="hideDialogMaintenance()"></button>
+      <button pButton pRipple label="Enregistrer" icon="pi pi-check" class="p-button-text" (click)="updateMaintenance()"
+        type="submit"></button>
+    </ng-template>
+  </p-dialog>
+</div>

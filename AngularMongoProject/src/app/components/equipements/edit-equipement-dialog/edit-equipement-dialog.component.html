@@ -1,0 +1,67 @@
+<div *ngIf="equipementDialogEdit">
+    <p-dialog [(visible)]="equipementDialogEdit" [style]="{width: '900px','height': '700px'}" header="Modifier equipement"
+      [modal]="true" class="p-fluid" [formGroup]="equipementFormEdit">
+      <div class="card">
+        <div class="p-fluid p-formgrid grid">
+          <div class="field col-12 md:col-6">
+            <label htmlFor="nom">Nom_Equipement</label>
+            <input pInputText type="texte" id="nom" formControlName="nom" inputId="nom" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && equipementFormEdit.get('nom')?.hasError('required')}" />
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && equipementFormEdit.get('nom')?.hasError('required')">Nom
+              equipement est requis.</small>
+          </div>
+          <div>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="dateAchat">Date Achat</label>
+            <p-calendar formControlName="dateAchat" [showIcon]="true" inputId="dateAchat" required autofocus></p-calendar>
+            <small class="ng-dirty ng-invalid"
+              *ngIf="submitted && equipementFormEdit.get('dateAchat')?.hasError('required')">Date Achat est requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="type">Type</label>
+            <input pInputText type="texte" id="type" formControlName="type" inputId="type" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && equipementFormEdit.get('type')?.hasError('required')}" />
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && equipementFormEdit.get('type')?.hasError('required')">Type
+              est requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="etat">Etat</label>
+            <p-dropdown
+            formControlName="etat"
+            [options]="etatsOptions"
+            optionLabel="label"
+            optionValue="value"
+            display="chip"
+            placeholder="Sélectionner une état"
+            autofocus
+            [ngClass]="{'ng-invalid ng-dirty' :submitted && equipementFormEdit.get('etat')?.hasError('required')}">
+            </p-dropdown>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && equipementFormEdit.get('etat')?.hasError('required')">Etat
+              est requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="competence">Competence (type)</label>
+            <p-dropdown
+            formControlName="competence"
+            [options]="competences"
+            optionLabel="nom"
+            optionValue="id"
+            display="chip"
+            placeholder="Sélectionner les compétences"
+            autofocus>
+            <ng-template let-option pTemplate="item">
+              <span>{{ option.nom }} ({{ option.type }})</span>
+            </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialog()"></button>
+        <button pButton pRipple label="Enregistrer" icon="pi pi-check" class="p-button-text" (click)="updateEquipement()"
+          type="submit"></button>
+      </ng-template>
+    </p-dialog>
+  </div>

@@ -1,0 +1,42 @@
+<div *ngIf="tacheDialogAdd">
+    <p-dialog [(visible)]="tacheDialogAdd" [style]="{width: '900px','height': '700px'}" header="Ajouter tache"
+      [modal]="true" class="p-fluid" [formGroup]="tacheForm">
+      <div class="card">
+        <div class="p-fluid p-formgrid grid">
+          <div class="field col-12 md:col-6">
+            <label htmlFor="nom">Nom_tache</label>
+            <input pInputText id="nom" type="texte" formControlName="nom" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && tacheForm.get('nom')?.hasError('required')}" />
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && tacheForm.get('nom')?.hasError('required')">Nom
+              tache est requis.</small>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && tacheForm.get('nom')?.hasError('minlength')">
+              Le nom doit contenir au moins 3 caractères.
+            </small>
+
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="description">Description</label>
+            <input pInputText id="description" type="texte" formControlName="description" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && tacheForm.get('description')?.hasError('required')}" />
+            <small class="ng-dirty ng-invalid"
+              *ngIf="submitted && tacheForm.get('description')?.hasError('required')">Description est requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="statut">Statut</label>
+            <p-dropdown formControlName="statut" [options]="statusOptions" optionLabel="label" optionValue="value"
+            display="chip" placeholder="Sélectionner une statut" autofocus
+            [ngClass]="{'ng-invalid ng-dirty' :submitted && tacheForm.get('statut')?.hasError('required')}">
+          </p-dropdown>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && tacheForm.get('statut')?.hasError('required')">Statut
+              est requis.</small>
+          </div>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialog()"></button>
+        <button pButton pRipple label="Enregistrer" icon="pi pi-check" class="p-button-text" (click)="addTache()"
+          type="submit"></button>
+      </ng-template>
+    </p-dialog>
+  </div>

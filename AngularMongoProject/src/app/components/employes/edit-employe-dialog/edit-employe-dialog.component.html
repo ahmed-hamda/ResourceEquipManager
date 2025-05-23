@@ -1,0 +1,70 @@
+<div *ngIf="employeDialogEdit">
+    <p-dialog [(visible)]="employeDialogEdit" header="Modifier employé" [modal]="true"
+      [style]="{width: '900px','height': '700px'}" class="p-fluid" [formGroup]="employeFormEdit">
+      <div class="col-12">
+        <div class="card">
+          <div class="p-fluid p-formgrid grid">
+            <div class="field col-12 md:col-6">
+              <label for="nom">Nom</label>
+              <input formControlName="nom" pInputText id="nom" type="text" required autofocus
+                [ngClass]="{'ng-invalid ng-dirty' :submitted && employeFormEdit.get('nom')?.hasError('required')}" />
+              <small class="ng-dirty ng-invalid" *ngIf="submitted && employeFormEdit.get('nom')?.hasError('required')">
+                Le nom est requis.
+              </small>
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="prenom">Prénom</label>
+              <input formControlName="prenom" pInputText id="prenom" type="text" required autofocus
+                [ngClass]="{'ng-invalid ng-dirty' :submitted && employeFormEdit.get('prenom')?.hasError('required')}" />
+              <small class="ng-dirty ng-invalid" *ngIf="submitted && employeFormEdit.get('prenom')?.hasError('required')">
+                Le prénom est requis.
+              </small>
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="cin">CIN</label>
+              <input formControlName="cin" pInputText id="cin" type="text" autofocus required
+                [ngClass]="{'ng-invalid ng-dirty' :submitted && employeFormEdit.get('cin')?.hasError('required')}" />
+              <small class="ng-dirty ng-invalid" *ngIf="submitted && employeFormEdit.get('cin')?.hasError('required')">
+                le CIN est requis.
+              </small>
+              <small class="ng-dirty ng-invalid" *ngIf="submitted && employeFormEdit.get('cin')?.hasError('pattern')">
+                Veuillez saisir un numéro CIN valide de 8 chiffres.
+              </small>
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="email">Email</label>
+              <input formControlName="email" pInputText id="email" type="email" required autofocus
+                [ngClass]="{'ng-invalid ng-dirty' :submitted && employeFormEdit.get('email')?.hasError('required')}" />
+              <small class="ng-dirty ng-invalid" *ngIf="submitted && employeFormEdit.get('email')?.hasError('required')">
+                L'email est requis.
+              </small>
+              <small class="ng-dirty ng-invalid" *ngIf="submitted && employeFormEdit.get('email')?.hasError('email')">
+                Le format de l'email est invalide.
+              </small>
+            </div>
+            <div class="field col-12 md:col-6">
+              <label for="competence">Competences (type)</label>
+              <p-multiSelect
+                formControlName="competences"
+                [options]="competences"
+                optionLabel="nom"
+                optionValue="id"
+                display="chip"
+                placeholder="Sélectionner les compétences"
+                autofocus>
+                <ng-template let-option pTemplate="item">
+                  <span>{{ option.nom }} ({{ option.type }})</span>
+                </ng-template>
+              </p-multiSelect>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Annuler" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialog()"></button>
+        <button pButton pRipple type="submit" label="Enregistrer" icon="pi pi-check" class="p-button-text"
+          (click)="updateEmploye()"></button>
+      </ng-template>
+    </p-dialog>
+  </div>

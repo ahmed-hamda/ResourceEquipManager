@@ -1,0 +1,29 @@
+<div *ngIf="certificationDialogEdit">
+    <p-dialog [(visible)]="certificationDialogEdit" [style]="{width: '900px','height': '700px'}" header="Modifier certification"
+      [modal]="true" class="p-fluid" [formGroup]="certificationFormEdit">
+      <div class="card">
+        <div class="p-fluid p-formgrid grid">
+          <div class="field col-12 md:col-6">
+            <label htmlFor="nom">Nom_certification</label>
+            <input pInputText id="nom" type="texte" formControlName="nom" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && certificationFormEdit.get('nom')?.hasError('required')}" />
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && certificationFormEdit.get('nom')?.hasError('required')">Nom
+              certification est requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="dateAjout">Date Ajout</label>
+            <p-calendar [showIcon]="true" id="dateAjout" formControlName="dateAjout" inputId="dateAjout" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && certificationFormEdit.get('dateAjout')?.hasError('required')}"></p-calendar>
+            <small class="ng-dirty ng-invalid"
+              *ngIf="submitted && certificationFormEdit.get('dateAjout')?.hasError('required')">Date d'Ajout est requis.</small>
+          </div>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialog()"></button>
+        <button pButton pRipple label="Enregistrer" icon="pi pi-check" class="p-button-text" (click)="updateCertification()"
+          type="submit"></button>
+      </ng-template>
+    </p-dialog>
+  </div>

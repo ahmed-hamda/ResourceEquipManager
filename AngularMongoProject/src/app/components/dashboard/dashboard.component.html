@@ -1,0 +1,58 @@
+<div class="grid p-fluid">
+  <div class="col-12 lg:col-6 xl:col-12">
+    <div class="card mb-0">
+      <h4>Bonjour, Admin</h4>
+      <h6>{{ currentDate }}</h6>
+    </div>
+  </div>
+    <!-- Card Employés -->
+    <div class="col-12 md:col-3">
+      <div class="card text-center cursor-pointer" (click)="goTo('RH/employes')">
+        <div class="flex flex-column align-items-center">
+          <i class="pi pi-users text-4xl mb-2 text-success"></i>
+          <h5>Employés</h5>
+          <p class="text-lg font-bold">{{ totalEmployes }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Card Équipements -->
+    <div class="col-12 md:col-3">
+      <div class="card text-center cursor-pointer" (click)="goTo('RH/equipements')">
+        <div class="flex flex-column align-items-center">
+          <i class="pi pi-car text-4xl mb-2 text-success"></i>
+          <h5>Équipements</h5>
+          <p class="text-lg font-bold">{{ totalEquipements }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Card Affectations -->
+    <div class="col-12 md:col-3">
+      <div class="card text-center cursor-pointer" (click)="goTo('RH/affectations')">
+        <div class="flex flex-column align-items-center">
+          <i class="pi pi-briefcase text-4xl mb-2 text-warning"></i>
+          <h5>Affectations</h5>
+          <p class="text-lg font-bold">{{ totalAffectations }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Card Tâches -->
+    <div class="col-12 md:col-3">
+      <div class="card text-center cursor-pointer" (click)="goTo('RH/taches')">
+        <div class="flex flex-column align-items-center">
+          <i class="pi pi-file text-4xl mb-2 text-danger"></i>
+          <h5>Tâches</h5>
+          <p class="text-lg font-bold">{{ totalTaches }}</p>
+        </div>
+      </div>
+    </div>
+  
+  <div class="col-12 lg:col-12">
+    <div class="card" style="height: 700px; overflow: hidden;">
+      <h5>Durée des Affectations</h5>
+      <p-chart type="bar" [data]="data1" [options]="options1" style="height: 100%;"></p-chart>
+    </div>
+  </div>
+</div>

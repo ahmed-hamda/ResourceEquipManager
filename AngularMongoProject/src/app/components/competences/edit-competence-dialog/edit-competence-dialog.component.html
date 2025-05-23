@@ -1,0 +1,43 @@
+<div *ngIf="competenceDialogEdit">
+    <p-dialog [(visible)]="competenceDialogEdit" [style]="{width: '900px','height': '700px'}" header="Modifier competence"
+      [modal]="true" class="p-fluid" [formGroup]="competenceFormEdit">
+      <div class="card">
+        <div class="p-fluid p-formgrid grid">
+          <div class="field col-12 md:col-6">
+            <label htmlFor="nom">Nom competence</label>
+            <input pInputText id="nom" type="texte" formControlName="nom" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && competenceFormEdit.get('nom')?.hasError('required')}" />
+            <small class="ng-dirty ng-invalid"
+              *ngIf="submitted && competenceFormEdit.get('nom')?.hasError('required')">Nom competence est
+              requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="type">Type</label>
+            <input pInputText id="type" type="texte" formControlName="type" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && competenceFormEdit.get('type')?.hasError('required')}" />
+            <small class="ng-dirty ng-invalid"
+              *ngIf="submitted && competenceFormEdit.get('type')?.hasError('required')">Type est
+              requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="certifications">Certifications</label>
+            <p-multiSelect
+              formControlName="certifications"
+              [options]="certifications"
+              optionLabel="nom"
+              optionValue="id"
+              display="chip"
+              placeholder="Sélectionner les certifications"
+              autofocus>
+            </p-multiSelect>
+            </div>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialog()"></button>
+        <button pButton pRipple label="Enregistrer" icon="pi pi-check" class="p-button-text"
+          (click)="updateCompetence()" type="submit"></button>
+      </ng-template>
+    </p-dialog>
+  </div>

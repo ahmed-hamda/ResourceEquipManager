@@ -1,0 +1,83 @@
+<div class="card px-5 py-5">
+    <p-toast></p-toast>
+    
+    <p-table #dt [value]="affectations" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['employe.nom']"
+        [paginator]="true" [rowsPerPageOptions]="[5,10,15]" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Affichage de {first} à {last} des entrées {totalRecords}" [rowHover]="true">
+        <ng-template pTemplate="caption">
+            <div class="flex flex-row justify-content-between items-center">
+                <div class="w-full">
+                    <h5 class="m-1">Gère les affectations </h5>
+                </div>
+                <div class="block mt-5 md:mt-0 p-input-icon-right text-right">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Chercher..."
+                        class="w-full sm:w-auto" />
+                </div>
+            </div>
+        </ng-template>
+
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="tache">Tache<p-sortIcon field="tache"></p-sortIcon></th>
+                <th pSortableColumn="nomeq">Equipement<p-sortIcon field="nomeq"></p-sortIcon></th>
+                <th pSortableColumn="dateDebut">Date Début<p-sortIcon field="dateDebut"></p-sortIcon></th>
+                <th pSortableColumn="dateFin">Date Fin<p-sortIcon field="dateFin"></p-sortIcon></th>
+                <th pSortableColumn="statut">Statut<p-sortIcon field="statut"></p-sortIcon></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-affectation>
+            <tr>
+                <td style="width:15%; min-width:9rem;">
+                    <span class="p-column-title">Tache</span>
+                    {{affectation.tache.nom}}
+                </td>
+
+                <td style="width:15%; min-width:9rem;">
+                    <span class="p-column-title">Equipement</span>
+                    {{affectation.equipement.nom}}
+                </td>
+                <td style="width:15%; min-width:9rem;">
+                    <span class="p-column-title">Date Début</span>
+                    {{affectation.dateDebut}}
+                </td>
+                <td style="width:15%; min-width:9rem;">
+                    <span class="p-column-title">Date Début</span>
+                    {{affectation.dateFin}}
+                </td>
+                <td>
+                    <span class="p-column-title">Statut</span>
+                    <button pButton pRipple type="button" [disabled]="affectation.statut==='terminé'" [label]="affectation.statut"
+                        class="p-button-secondary p-button-text" (click)="openStatutDialog(affectation.id)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<div *ngIf="statutDialog">
+    <p-dialog [(visible)]="statutDialog" [style]="{width: '900px','height': '700px'}" header="Modifier Affectation"
+        [modal]="true" class="p-fluid" [formGroup]="affectationFormEdit">
+        <div class="card">
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 md:col-6">
+                    <label for="statut">Statut</label>
+                    <p-dropdown [options]="statusOptions" formControlName="statut" optionLabel="label" display="chip"
+                        optionValue="value" placeholder="Sélectionner une statut"
+                        [ngClass]="{'ng-invalid ng-dirty' : affectationFormEdit.get('statut')?.hasError('required')}">
+                        
+                    </p-dropdown>
+                </div>
+                <div>
+                </div>
+            </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text"
+                (click)="hideDialog()"></button>
+            <button pButton pRipple label="Enregistrer" icon="pi pi-check" class="p-button-text"
+                (click)="updateAffectation()" type="submit"></button>
+        </ng-template>
+    </p-dialog>
+</div>

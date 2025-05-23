@@ -1,0 +1,93 @@
+<div class="card px-5 py-5">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-2">
+    <ng-template pTemplate="left">
+      <div class="my-2">
+        <button pButton pRipple label="Ajouter" icon="pi pi-plus" class="p-button-success mr-2"
+          (click)="openNew()"></button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+  <p-table #dt [value]="employes" responsiveLayout="scroll" [rows]="5" [paginator]="true"
+    [rowsPerPageOptions]="[5,10,15]" [showCurrentPageReport]="true" [globalFilterFields]="['nom']"
+    currentPageReportTemplate="Affichage de {first} à {last} des entrées {totalRecords}" [rowHover]="true">
+    <ng-template pTemplate="caption">
+      <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+        <h5 class="m-0">Gèrer les employés</h5>
+        <span class="block mt-5 md:mt-0 p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Chercher par nom..."
+            class="w-full sm:w-auto" />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Nom <p-sortIcon field="nom"></p-sortIcon></th>
+        <th pSortableColumn="prenom">Prénom<p-sortIcon field="prenom"></p-sortIcon></th>
+        <th pSortableColumn="cin">CIN<p-sortIcon field="cin"></p-sortIcon></th>
+        <th pSortableColumn="email">Email<p-sortIcon field="email"></p-sortIcon></th>
+        <th pSortableColumn="competences">Competences<p-sortIcon field="competences"></p-sortIcon></th>
+        <th>Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-employe>
+      <tr>
+        <td style="width:14%; min-width:9rem;"><span class="p-column-title">Nom</span>
+          {{employe.nom}}
+        </td>
+        <td style="width:14%; min-width:6rem;"><span class="p-column-title">Prénom</span>
+          {{employe.prenom}}
+        </td>
+        <td style="width:14%; min-width:6rem;"><span class="p-column-title">CIN</span>
+          {{employe.cin}}
+        </td>
+        <td style="width:14%; min-width:6rem;"><span class="p-column-title">Email</span>
+          {{employe.email}}
+        </td>
+        <td style="width:14%; min-width:6rem;"><span class="p-column-title">Competences</span>
+          <ul>
+            <ng-container *ngIf="employe.competences?.length > 0; else noCompetences">
+              <li *ngFor="let c of employe.competences">
+                {{ c?.nom }}
+              </li>
+            </ng-container>
+            <ng-template #noCompetences>
+              Aucune competence
+            </ng-template>
+          </ul>
+        </td>
+        <td>
+          <div class="flex flex-wrap gap-2" style="width:14%; min-width:7rem;">
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+              (click)="getEmploye(employe.id)"></button>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              (click)="deleteEmploye(employe)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<app-add-employe-dialog [employeDialogAdd]="employeDialogAdd" [competences]="competences" (save)="onAddEmploye($event)"
+  (close)="employeDialogAdd = false">
+</app-add-employe-dialog>
+
+<app-edit-employe-dialog [employeDialogEdit]="employeDialogEdit" [employe]="selectedEmploye" [competences]="competences"
+  (save)="onUpdateEmploye($event)" (close)="employeDialogEdit = false">
+</app-edit-employe-dialog>
+
+<div *ngIf="deleteEmployeDialog">
+  <p-dialog [(visible)]="deleteEmployeDialog" header="Confirmer" [modal]="true" [style]="{width:'450px'}">
+    <div class="flex align-items-center justify-content-center">
+      <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+      <span *ngIf="employe">Êtes-vous sûr de vouloir supprimer <b>{{employe.nom}}</b>?</span>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Non"
+        (click)="deleteEmployeDialog = false"></button>
+      <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Oui" (click)="confirmDelete()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

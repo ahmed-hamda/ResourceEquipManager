@@ -1,0 +1,67 @@
+<div *ngIf="affectationDialogEdit">
+    <p-dialog [(visible)]="affectationDialogEdit" [style]="{width: '900px','height': '700px'}"
+      header="Modifier Affectation" [modal]="true" class="p-fluid" [formGroup]="affectationFormEdit">
+      <div class="card">
+        <div class="p-fluid p-formgrid grid">
+          <div class="field col-12 md:col-6">
+            <label htmlFor="equipement">Equipement</label>
+            <p-dropdown [options]="equipements" formControlName="equipement" optionLabel="nom"
+              placeholder="Sélectionner un equipement"
+              [ngClass]="{'ng-invalid ng-dirty' : submitted && affectationFormEdit.get('equipement')?.hasError('required')}"
+              (onChange)="getEmployesByEquipement($event.value)">
+              <ng-template let-option pTemplate="item">
+                <span>{{ option.nom }}</span>
+              </ng-template>
+            </p-dropdown>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="employe">Employé</label>
+            <p-dropdown [options]="employes" formControlName="employe" optionLabel="nom"
+              placeholder="Sélectionner un employé"
+              [ngClass]="{'ng-invalid ng-dirty' : submitted && affectationFormEdit.get('employe')?.hasError('required')}"
+              (onChange)="getEquipementsByEmploye($event.value)">
+              <ng-template let-option pTemplate="item">
+                <span>{{ option.nom }} {{ option.prenom }}</span>
+              </ng-template>
+            </p-dropdown>
+            <small class="ng-dirty ng-invalid" *ngIf="submitted && affectationFormEdit.get('employe')?.hasError('required')">Employé
+              est requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="dateDebut">Date Début</label>
+            <p-calendar [showIcon]="true" id="dateDebut" formControlName="dateDebut" inputId="dateDebut" required
+              autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && affectationFormEdit.get('dateDebut')?.hasError('required')}"></p-calendar>
+            <small class="ng-dirty ng-invalid"
+              *ngIf="submitted && affectationFormEdit.get('dateDebut')?.hasError('required')">Date
+              Début est requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label htmlFor="dateFin">Date Fin</label>
+            <p-calendar [showIcon]="true" id="dateFin" formControlName="dateFin" inputId="dateFin" required autofocus
+              [ngClass]="{'ng-invalid ng-dirty' :submitted && affectationFormEdit.get('dateFin')?.hasError('required')}"></p-calendar>
+            <small class="ng-dirty ng-invalid"
+              *ngIf="submitted && affectationFormEdit.get('dateFin')?.hasError('required')">Date
+              Fin est requis.</small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="tache">Tâche</label>
+            <p-dropdown [options]="taches" formControlName="tache" optionLabel="nom" placeholder="Sélectionner une tache"
+              [ngClass]="{'ng-invalid ng-dirty' : submitted && affectationFormEdit.get('tache')?.hasError('required')}">
+              <ng-template let-option pTemplate="item">
+                <span>{{ option.nom }}</span>
+              </ng-template>
+            </p-dropdown>
+          </div>
+          <div>
+          </div>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialog()"></button>
+        <button pButton pRipple label="Enregistrer" icon="pi pi-check" class="p-button-text" (click)="updateAffectation()"
+          type="submit"></button>
+      </ng-template>
+    </p-dialog>
+  </div>
